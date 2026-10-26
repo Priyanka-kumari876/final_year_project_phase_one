@@ -1,0 +1,52 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Environments & IDEs
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Datasets and large raw binaries
+pamap2+physical+activity+monitoring/
+data/raw/
+*.dat
+*.zip
+*.tar.gz
+data/processed/*.parquet
+data/processed/*.csv.gz
+
+# Results logs and models (keep tables and figures)
+results/logs/*.log
+results/models/*.joblib

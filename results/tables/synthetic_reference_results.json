@@ -1,0 +1,6 @@
+{
+  "fraction_active_when_asleep": 0.7254901960784313,
+  "fraction_active_when_awake": 1.0,
+  "hysteresis_gap": 0.2745,
+  "hysteresis_confirmed": true
+}

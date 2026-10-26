@@ -1,0 +1,87 @@
+# Configuration for P10: Multimodal Acquisition with Sensor Wake-Up Costs and Outages
+
+data:
+  raw_dir: "pamap2+physical+activity+monitoring/PAMAP2_Dataset/PAMAP2_Dataset/Protocol"
+  optional_dir: "pamap2+physical+activity+monitoring/PAMAP2_Dataset/PAMAP2_Dataset/Optional"
+  processed_dir: "data/processed"
+  manifest_path: "data/processed/data_manifest.json"
+  features_path: "data/processed/windows_features.parquet"
+  features_csv_path: "data/processed/windows_features.csv"
+  window_size_sec: 3.0
+  overlap: 0.5
+  sampling_rate_imu: 100.0
+  sampling_rate_hr: 9.0
+  protocol_activities: [1, 2, 3, 4, 5, 6, 7, 12, 13, 16, 17, 24]
+  activity_names:
+    1: "lying"
+    2: "sitting"
+    3: "standing"
+    4: "walking"
+    5: "running"
+    6: "cycling"
+    7: "nordic_walking"
+    12: "ascending_stairs"
+    13: "descending_stairs"
+    16: "vacuum_cleaning"
+    17: "ironing"
+    24: "rope_jumping"
+  sensor_groups: ["hand", "ankle", "heart_rate"]
+
+splits:
+  default:
+    train: [101, 102, 103, 104, 107, 108]
+    val: [105]
+    test: [106]
+  rotations:
+    fold_0:
+      train: [101, 102, 103, 104, 107, 108]
+      val: [105]
+      test: [106]
+    fold_1:
+      train: [103, 104, 105, 106, 107, 108]
+      val: [101]
+      test: [102]
+    fold_2:
+      train: [101, 102, 105, 106, 107, 108]
+      val: [103]
+      test: [104]
+
+costs:
+  running_costs:
+    hand: 1.0
+    ankle: 1.0
+    heart_rate: 0.5
+  wake_ratios: [0.0, 1.0, 5.0, 10.0]
+  default_wake_ratio: 5.0
+  attempt_cost: 0.2
+  lambda_weight: 0.05
+  mu_weight: 0.05
+
+outages:
+  scenarios:
+    no_outage:
+      p_fail: 0.0
+      p_recover: 1.0
+    rare_independent:
+      p_fail: 0.02
+      p_recover: 0.80
+    bursty_short:
+      p_fail: 0.05
+      p_recover: 0.40
+    bursty_long:
+      p_fail: 0.05
+      p_recover: 0.10
+  stress_test:
+    hidden_availability: true
+
+models:
+  classifier_type: "logistic_regression"
+  gain_estimator: "ridge"
+  random_seed: 42
+
+output:
+  results_dir: "results"
+  tables_dir: "results/tables"
+  figures_dir: "results/figures"
+  logs_dir: "results/logs"
+  models_dir: "results/models"

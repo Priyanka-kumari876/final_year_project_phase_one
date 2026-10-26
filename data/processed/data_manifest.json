@@ -1,0 +1,286 @@
+{
+  "dataset_name": "PAMAP2 Physical Activity Monitoring",
+  "protocol_directory": "C:\\Users\\princ\\Desktop\\final_year_project\\pamap2+physical+activity+monitoring\\PAMAP2_Dataset\\PAMAP2_Dataset\\Protocol",
+  "protocol_activities": {
+    "1": "lying",
+    "2": "sitting",
+    "3": "standing",
+    "4": "walking",
+    "5": "running",
+    "6": "cycling",
+    "7": "nordic_walking",
+    "12": "ascending_stairs",
+    "13": "descending_stairs",
+    "16": "vacuum_cleaning",
+    "17": "ironing",
+    "24": "rope_jumping"
+  },
+  "sensor_groups": {
+    "hand": [
+      "hand_acc_16g_x",
+      "hand_acc_16g_y",
+      "hand_acc_16g_z",
+      "hand_gyro_x",
+      "hand_gyro_y",
+      "hand_gyro_z",
+      "hand_mag_x",
+      "hand_mag_y",
+      "hand_mag_z",
+      "hand_temp"
+    ],
+    "ankle": [
+      "ankle_acc_16g_x",
+      "ankle_acc_16g_y",
+      "ankle_acc_16g_z",
+      "ankle_gyro_x",
+      "ankle_gyro_y",
+      "ankle_gyro_z",
+      "ankle_mag_x",
+      "ankle_mag_y",
+      "ankle_mag_z",
+      "ankle_temp"
+    ],
+    "heart_rate": [
+      "heart_rate"
+    ]
+  },
+  "subjects": {
+    "subject101": {
+      "subject_id": 101,
+      "filename": "subject101.dat",
+      "file_size_mb": 135.13,
+      "total_rows": 376417,
+      "transient_rows": 126460,
+      "valid_protocol_rows": 249957,
+      "duration_sec": 3772.16,
+      "missing_rates_pct": {
+        "heart_rate": 90.86,
+        "hand_imu": 0.54,
+        "ankle_imu": 0.44
+      },
+      "activity_counts": {
+        "lying": 27187,
+        "sitting": 23480,
+        "standing": 21717,
+        "walking": 22253,
+        "running": 21265,
+        "cycling": 23575,
+        "nordic_walking": 20265,
+        "ascending_stairs": 15890,
+        "descending_stairs": 14899,
+        "vacuum_cleaning": 22941,
+        "ironing": 23573,
+        "rope_jumping": 12912
+      }
+    },
+    "subject102": {
+      "subject_id": 102,
+      "filename": "subject102.dat",
+      "file_size_mb": 197.74,
+      "total_rows": 447000,
+      "transient_rows": 183651,
+      "valid_protocol_rows": 263349,
+      "duration_sec": 4469.99,
+      "missing_rates_pct": {
+        "heart_rate": 90.86,
+        "hand_imu": 0.93,
+        "ankle_imu": 0.6
+      },
+      "activity_counts": {
+        "lying": 23430,
+        "sitting": 22345,
+        "standing": 25576,
+        "walking": 32533,
+        "running": 9238,
+        "cycling": 25108,
+        "nordic_walking": 29739,
+        "ascending_stairs": 17342,
+        "descending_stairs": 15213,
+        "vacuum_cleaning": 20683,
+        "ironing": 28880,
+        "rope_jumping": 13262
+      }
+    },
+    "subject103": {
+      "subject_id": 103,
+      "filename": "subject103.dat",
+      "file_size_mb": 112.4,
+      "total_rows": 252833,
+      "transient_rows": 78495,
+      "valid_protocol_rows": 174338,
+      "duration_sec": 2528.32,
+      "missing_rates_pct": {
+        "heart_rate": 90.86,
+        "hand_imu": 0.28,
+        "ankle_imu": 0.24
+      },
+      "activity_counts": {
+        "lying": 22044,
+        "sitting": 28761,
+        "standing": 20533,
+        "walking": 29036,
+        "ascending_stairs": 10389,
+        "descending_stairs": 15275,
+        "vacuum_cleaning": 20325,
+        "ironing": 27975
+      }
+    },
+    "subject104": {
+      "subject_id": 104,
+      "filename": "subject104.dat",
+      "file_size_mb": 146.13,
+      "total_rows": 329576,
+      "transient_rows": 98155,
+      "valid_protocol_rows": 231421,
+      "duration_sec": 3295.75,
+      "missing_rates_pct": {
+        "heart_rate": 90.86,
+        "hand_imu": 0.93,
+        "ankle_imu": 0.36
+      },
+      "activity_counts": {
+        "lying": 23047,
+        "sitting": 25492,
+        "standing": 24706,
+        "walking": 31932,
+        "running": 1,
+        "cycling": 22699,
+        "nordic_walking": 27533,
+        "ascending_stairs": 16694,
+        "descending_stairs": 14285,
+        "vacuum_cleaning": 20037,
+        "ironing": 24995
+      }
+    },
+    "subject105": {
+      "subject_id": 105,
+      "filename": "subject105.dat",
+      "file_size_mb": 165.72,
+      "total_rows": 374783,
+      "transient_rows": 102341,
+      "valid_protocol_rows": 272442,
+      "duration_sec": 3747.82,
+      "missing_rates_pct": {
+        "heart_rate": 90.87,
+        "hand_imu": 0.52,
+        "ankle_imu": 0.57
+      },
+      "activity_counts": {
+        "lying": 23699,
+        "sitting": 26864,
+        "standing": 22132,
+        "walking": 32033,
+        "running": 24646,
+        "cycling": 24577,
+        "nordic_walking": 26271,
+        "ascending_stairs": 14281,
+        "descending_stairs": 12727,
+        "vacuum_cleaning": 24445,
+        "ironing": 33034,
+        "rope_jumping": 7733
+      }
+    },
+    "subject106": {
+      "subject_id": 106,
+      "filename": "subject106.dat",
+      "file_size_mb": 160.47,
+      "total_rows": 361817,
+      "transient_rows": 111721,
+      "valid_protocol_rows": 250096,
+      "duration_sec": 3618.16,
+      "missing_rates_pct": {
+        "heart_rate": 90.87,
+        "hand_imu": 0.34,
+        "ankle_imu": 0.39
+      },
+      "activity_counts": {
+        "lying": 23340,
+        "sitting": 23041,
+        "standing": 24356,
+        "walking": 25721,
+        "running": 22825,
+        "cycling": 20486,
+        "nordic_walking": 26686,
+        "ascending_stairs": 13291,
+        "descending_stairs": 11272,
+        "vacuum_cleaning": 21078,
+        "ironing": 37744,
+        "rope_jumping": 256
+      }
+    },
+    "subject107": {
+      "subject_id": 107,
+      "filename": "subject107.dat",
+      "file_size_mb": 139.07,
+      "total_rows": 313599,
+      "transient_rows": 80823,
+      "valid_protocol_rows": 232776,
+      "duration_sec": 3135.98,
+      "missing_rates_pct": {
+        "heart_rate": 90.87,
+        "hand_imu": 0.6,
+        "ankle_imu": 0.37
+      },
+      "activity_counts": {
+        "lying": 25611,
+        "sitting": 12282,
+        "standing": 25751,
+        "walking": 33720,
+        "running": 3692,
+        "cycling": 22680,
+        "nordic_walking": 28725,
+        "ascending_stairs": 17646,
+        "descending_stairs": 11618,
+        "vacuum_cleaning": 21552,
+        "ironing": 29499
+      }
+    },
+    "subject108": {
+      "subject_id": 108,
+      "filename": "subject108.dat",
+      "file_size_mb": 181.22,
+      "total_rows": 408031,
+      "transient_rows": 145929,
+      "valid_protocol_rows": 262102,
+      "duration_sec": 4080.3,
+      "missing_rates_pct": {
+        "heart_rate": 90.9,
+        "hand_imu": 0.38,
+        "ankle_imu": 0.45
+      },
+      "activity_counts": {
+        "lying": 24165,
+        "sitting": 22923,
+        "standing": 25160,
+        "walking": 31533,
+        "running": 16532,
+        "cycling": 25475,
+        "nordic_walking": 28888,
+        "ascending_stairs": 11683,
+        "descending_stairs": 9655,
+        "vacuum_cleaning": 24292,
+        "ironing": 32990,
+        "rope_jumping": 8806
+      }
+    },
+    "subject109": {
+      "subject_id": 109,
+      "filename": "subject109.dat",
+      "file_size_mb": 3.71,
+      "total_rows": 8477,
+      "transient_rows": 2086,
+      "valid_protocol_rows": 6391,
+      "duration_sec": 84.76,
+      "missing_rates_pct": {
+        "heart_rate": 90.85,
+        "hand_imu": 0.03,
+        "ankle_imu": 0.05
+      },
+      "activity_counts": {
+        "rope_jumping": 6391
+      }
+    }
+  },
+  "total_files": 9,
+  "total_protocol_samples": 1942872
+}
