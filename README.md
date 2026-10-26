@@ -398,34 +398,35 @@ Files required: `subject101.dat` through `subject109.dat`.
 
 ---
 
-## 26. Exact Commands to Run the Project
-To run the complete pipeline from scratch:
+## 26. Exact Commands to Run the Project (Numbered Sequence)
+All execution stages are provided as numbered scripts so you can clearly understand and run the sequence in order:
 
 ```bash
-# Stage 1: Inspect dataset, compute manifest, plot raw signals
-python scripts/inspect_dataset.py
+# Stage 01: Inspect dataset, compute manifest, plot sample raw signals
+python scripts/01_inspect_dataset.py
 
-# Stage 2: Segment windows and extract multimodal features
-python scripts/prepare_data.py
+# Stage 02: Fixed-grid windowing and feature extraction across all subjects
+python scripts/02_prepare_data.py
 
-# Stage 3: Train all 8 sensor-subset classifiers
-python scripts/train_classifiers.py
+# Stage 03: Train all 8 sensor-subset classifiers (Logistic Regression & Priors)
+python scripts/03_train_classifiers.py
 
-# Stage 4: Run the complete experimental suite (Main, Sweeps, Outages, DP Reference)
-python -u scripts/run_experiments.py
+# Stage 04: Run the complete experimental suite (Main, Sweeps, Outages, DP Reference)
+python -u scripts/04_run_experiments.py
 
-# Stage 5: Generate markdown research report
-python scripts/generate_report.py
+# Stage 05: Compile experimental tables and generate the research analysis report
+python scripts/05_generate_report.py
 ```
 
 ---
 
 ## 27. How to Run Individual Stages
-Each script is completely decoupled:
-- Run only dataset inspection: `python scripts/inspect_dataset.py`
-- Run only data windowing: `python scripts/prepare_data.py`
-- Run only classifier training: `python scripts/train_classifiers.py`
-- Run experiments with custom seeds: edit `configs/default.yaml` and run `python scripts/run_experiments.py`
+Each script is completely standalone and can be re-run independently:
+- **Inspect Dataset**: `python scripts/01_inspect_dataset.py`
+- **Re-extract Features**: `python scripts/02_prepare_data.py`
+- **Re-train Classifiers**: `python scripts/03_train_classifiers.py`
+- **Run Experiments**: `python -u scripts/04_run_experiments.py`
+- **Re-generate Final Report**: `python scripts/05_generate_report.py`
 
 ---
 
