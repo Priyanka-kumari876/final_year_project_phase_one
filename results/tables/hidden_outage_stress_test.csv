@@ -1,4 +1,0 @@
-policy_name,macro_f1,total_running_cost,total_wake_up_cost,total_attempt_cost,total_modeled_cost
-Proposed,0.8185,2910.0,775.0,73.8,3758.8
-Always All Sensors,0.7667,3629.0,952.5,114.6,4696.1
-Fixed (Hand+Ankle),0.819,2911.0,775.0,73.8,3759.8

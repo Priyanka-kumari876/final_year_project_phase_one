@@ -1,17 +1,17 @@
 wake_ratio,policy_name,macro_f1,total_running_cost,total_wake_up_cost,total_modeled_cost,wake_ups_per_1000_windows
-0.0,Proposed (Switching-Aware),0.7625,1628.0,0.0,1628.0,103.05
-0.0,Myopic Gain,0.7625,1628.0,0.0,1628.0,103.05
-0.0,Confidence + Keep-Alive,0.7469,2439.5,0.0,2439.5,196.34
-0.0,Always All,0.7667,3629.0,0.0,3629.0,137.8
-1.0,Proposed (Switching-Aware),0.017,0.0,0.0,0.0,0.0
-1.0,Myopic Gain,0.7625,1628.0,164.0,1792.0,103.05
-1.0,Confidence + Keep-Alive,0.7469,2439.5,260.0,2699.5,196.34
-1.0,Always All,0.7667,3629.0,190.5,3819.5,137.8
-5.0,Proposed (Switching-Aware),0.017,0.0,0.0,0.0,0.0
-5.0,Myopic Gain,0.7625,1628.0,820.0,2448.0,103.05
-5.0,Confidence + Keep-Alive,0.7469,2439.5,1300.0,3739.5,196.34
-5.0,Always All,0.7667,3629.0,952.5,4581.5,137.8
-10.0,Proposed (Switching-Aware),0.017,0.0,0.0,0.0,0.0
-10.0,Myopic Gain,0.7625,1628.0,1640.0,3268.0,103.05
-10.0,Confidence + Keep-Alive,0.7469,2439.5,2600.0,5039.5,196.34
-10.0,Always All,0.7667,3629.0,1905.0,5534.0,137.8
+0.0,Proposed (Switching-Aware),0.7889,3144.5,0.0,3144.5,170.14
+0.0,Myopic Gain,0.7889,3144.5,0.0,3144.5,170.14
+0.0,Confidence + Keep-Alive,0.7783,2489.5,0.0,2489.5,196.91
+0.0,Always All,0.8016,3727.5,0.0,3727.5,136.23
+1.0,Proposed (Switching-Aware),0.7889,3142.5,220.5,3363.0,168.95
+1.0,Myopic Gain,0.7889,3144.5,221.5,3366.0,170.14
+1.0,Confidence + Keep-Alive,0.7783,2489.5,267.5,2757.0,196.91
+1.0,Always All,0.8016,3727.5,193.0,3920.5,136.23
+5.0,Proposed (Switching-Aware),0.7939,3123.0,1077.5,4200.5,163.0
+5.0,Myopic Gain,0.7889,3144.5,1107.5,4252.0,170.14
+5.0,Confidence + Keep-Alive,0.7783,2489.5,1337.5,3827.0,196.91
+5.0,Always All,0.8016,3727.5,965.0,4692.5,136.23
+10.0,Proposed (Switching-Aware),0.7833,2921.5,1545.0,4466.5,93.99
+10.0,Myopic Gain,0.7889,3144.5,2215.0,5359.5,170.14
+10.0,Confidence + Keep-Alive,0.7783,2489.5,2675.0,5164.5,196.91
+10.0,Always All,0.8016,3727.5,1930.0,5657.5,136.23

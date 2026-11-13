@@ -31,20 +31,20 @@ splits:
   default:
     train: [101, 102, 103, 104, 107, 108]
     val: [105]
-    test: [106]
+    test: [106, 109]
   rotations:
     fold_0:
       train: [101, 102, 103, 104, 107, 108]
       val: [105]
-      test: [106]
+      test: [106, 109]
     fold_1:
       train: [103, 104, 105, 106, 107, 108]
       val: [101]
-      test: [102]
+      test: [102, 109]
     fold_2:
       train: [101, 102, 105, 106, 107, 108]
       val: [103]
-      test: [104]
+      test: [104, 109]
 
 costs:
   running_costs:

@@ -1,0 +1,21 @@
+policy_name,subject_id,num_windows,macro_f1,balanced_accuracy,accuracy,total_modeled_cost,wake_ups_per_1000_windows
+Proposed (Switching-Aware),106,1640,0.8302,0.8387,0.836,4106.5,165.24
+Proposed (Switching-Aware),109,41,0.1204,0.3171,0.3171,94.0,73.17
+Always All Sensors,106,1640,0.7701,0.8502,0.8476,4579.0,137.8
+Always All Sensors,109,41,0.1605,0.3171,0.3171,113.5,73.17
+Fixed (Hand+Ankle),106,1640,0.8222,0.8326,0.8293,3682.0,94.51
+Fixed (Hand+Ankle),109,41,0.0906,0.2927,0.2927,91.0,48.78
+Fixed (Hand Only),106,1640,0.781,0.7689,0.7799,1853.0,49.39
+Fixed (Hand Only),109,41,0.072,0.2195,0.2195,45.0,24.39
+Random Feasible,106,1640,0.631,0.6745,0.6787,6871.0,688.41
+Random Feasible,109,41,0.0705,0.2683,0.2683,190.5,731.71
+Myopic Gain (State-Agnostic),106,1640,0.8247,0.8349,0.8317,4158.0,172.56
+Myopic Gain (State-Agnostic),109,41,0.1204,0.3171,0.3171,94.0,73.17
+Confidence Trigger,106,1640,0.8034,0.8062,0.8073,4069.0,328.66
+Confidence Trigger,109,41,0.072,0.2195,0.2195,91.5,268.29
+Confidence + Keep-Alive,106,1640,0.8189,0.8268,0.8244,3749.0,199.39
+Confidence + Keep-Alive,109,41,0.1058,0.2683,0.2683,78.0,97.56
+Switching (No Outage Reasoning),106,1640,0.8181,0.828,0.825,3670.0,94.51
+Switching (No Outage Reasoning),109,41,0.0906,0.2927,0.2927,91.0,48.78
+Proposed Ablation (mu=0),106,1640,0.8247,0.8349,0.8317,4158.0,172.56
+Proposed Ablation (mu=0),109,41,0.1204,0.3171,0.3171,94.0,73.17

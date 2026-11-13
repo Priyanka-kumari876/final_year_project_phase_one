@@ -1,6 +1,6 @@
 {
   "dataset_name": "PAMAP2 Physical Activity Monitoring",
-  "protocol_directory": "C:\\Users\\princ\\Desktop\\final_year_project\\pamap2+physical+activity+monitoring\\PAMAP2_Dataset\\PAMAP2_Dataset\\Protocol",
+  "protocol_directory": "C:\\Users\\princ\\Desktop\\New folder\\final_year_project\\pamap2+physical+activity+monitoring\\PAMAP2_Dataset\\PAMAP2_Dataset\\Protocol",
   "protocol_activities": {
     "1": "lying",
     "2": "sitting",

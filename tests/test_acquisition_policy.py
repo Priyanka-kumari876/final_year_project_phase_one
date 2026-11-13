@@ -88,3 +88,26 @@ def test_random_policy_deterministic_with_seed():
     s2 = [p2.select_sensors(available, 0.5, 1.0, 1) for _ in range(20)]
 
     assert s1 == s2, "Identical seeds must produce identical random policy selections"
+
+
+def test_switching_no_outage_policy():
+    from src.baselines import SwitchingNoOutagePolicy
+
+    cm = SensorCostModel()
+    mock_estimator = MockGainEstimator({"hand": 100.0, "ankle": 100.0, "heart_rate": 100.0})
+    policy = SwitchingNoOutagePolicy(cost_model=cm, gain_estimator=mock_estimator)
+
+    # Ankle is in outage (only hand and heart_rate available)
+    available = {"hand", "heart_rate"}
+    selected = policy.select_sensors(
+        available_sensors=available,
+        prev_confidence=0.5,
+        prev_entropy=1.0,
+        prev_prediction=1,
+    )
+
+    # Policy should only return feasible sensors after physical intersection
+    assert "ankle" not in selected, "Unavailable sensor 'ankle' must not be acquired"
+    assert selected.issubset(available), "Selected set must be a subset of available sensors"
+    assert "hand" in selected and "heart_rate" in selected
+

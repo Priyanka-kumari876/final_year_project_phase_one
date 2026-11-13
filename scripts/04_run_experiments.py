@@ -1,25 +1,31 @@
 """
-Comprehensive Experiments Runner Script
-=======================================
-Executes the full suite of research experiments:
-1. Trains the Marginal Gain Estimator on training split history.
-2. Compares Proposed Switching-Aware policy against all baselines on held-out test split.
-3. Sweeps wake-to-running cost ratios in {0, 1, 5, 10}.
-4. Evaluates robustness under 4 paired Markov outage regimes.
-5. Runs hidden-availability stress test with attempt costs.
-6. Solves exact synthetic DP reference model and proves hysteresis existence.
-7. Generates Pareto curves, tables, logs, and publication plots.
+Comprehensive Experiments Runner Script (First Version)
+=======================================================
+Executes the full suite of research experiments for P10 First Version:
+1. Trains Marginal Gain Estimator on training split history.
+2. Compares Proposed Switching-Aware policy against all 6 baselines and 2 ablations on held-out test split.
+3. Computes per-held-out participant performance breakdown (Subject 106 and 109).
+4. Computes per-class recall across activities for all policies.
+5. Sweeps wake-to-running cost ratios in {0, 1, 5, 10}.
+6. Evaluates robustness under 4 paired Markov outage regimes.
+7. Evaluates cross-participant generalization across 3 participant rotation folds (fold_0, fold_1, fold_2).
+8. Solves exact synthetic DP reference model, verifying hysteresis gap.
+9. Generates Pareto curves, tables, logs, and publication plots without duplicate files.
 """
 
+import os
 import sys
 from pathlib import Path
+
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(PROJECT_ROOT))
+os.environ["MPLCONFIGDIR"] = str(PROJECT_ROOT / ".matplotlib_cache")
+
 import json
 import yaml
 import numpy as np
 import pandas as pd
-
-PROJECT_ROOT = Path(__file__).resolve().parent.parent
-sys.path.insert(0, str(PROJECT_ROOT))
+from sklearn.metrics import recall_score, f1_score, balanced_accuracy_score, accuracy_score
 
 from src.preprocessing import ParticipantSplitter
 from src.subset_classifiers import SubsetClassifierSuite
@@ -35,6 +41,7 @@ from src.baselines import (
     HistoryConfidencePolicy,
     HistoryConfidenceKeepAlivePolicy,
     ProposedNoWakeCostPolicy,
+    SwitchingNoOutagePolicy,
 )
 from src.simulator import run_chronological_simulation
 from src.synthetic_reference import SyntheticHMM, DPSolver
@@ -64,7 +71,7 @@ def main():
     logs_dir.mkdir(parents=True, exist_ok=True)
 
     print("=" * 80)
-    print("STEP 6-11: COMPREHENSIVE MULTIMODAL ACQUISITION EXPERIMENT SUITE")
+    print("STAGE 04: P10 MULTIMODAL ACQUISITION FIRST-VERSION EXPERIMENT SUITE")
     print("=" * 80)
 
     # 1. Load Data and Split
@@ -80,7 +87,7 @@ def main():
     # 2. Load Subset Classifiers Suite
     suite_path = models_dir / "subset_classifiers.joblib"
     if not suite_path.exists():
-        raise FileNotFoundError(f"Trained suite not found at {suite_path}. Run train_classifiers.py first.")
+        raise FileNotFoundError(f"Trained suite not found at {suite_path}. Run 03_train_classifiers.py first.")
     suite = SubsetClassifierSuite.load(suite_path)
     print(f"Loaded SubsetClassifierSuite with classes: {suite.classes_}")
 
@@ -116,7 +123,7 @@ def main():
     # EXPERIMENT 1: MAIN POLICY COMPARISON ON HELD-OUT TEST SPLIT
     # -------------------------------------------------------------
     print("\n" + "=" * 80)
-    print("EXPERIMENT 1: MAIN POLICY COMPARISON (TEST SET: SUBJECT 106)")
+    print("EXPERIMENT 1: MAIN POLICY COMPARISON (TEST SUBJECTS: 106, 109)")
     print(f"Cost settings: c_wake/c_run = {base_cost_model.default_wake_ratio:.1f} | Outage: Bursty Short")
     print("=" * 80)
 
@@ -129,12 +136,18 @@ def main():
         MyopicGainPolicy(base_cost_model, gain_estimator, name="Myopic Gain (State-Agnostic)"),
         HistoryConfidencePolicy(base_cost_model, conf_threshold=0.75, name="Confidence Trigger"),
         HistoryConfidenceKeepAlivePolicy(base_cost_model, conf_threshold=0.75, keep_alive_windows=4, name="Confidence + Keep-Alive"),
+        SwitchingNoOutagePolicy(base_cost_model, gain_estimator, name="Switching (No Outage Reasoning)"),
         ProposedNoWakeCostPolicy(base_cost_model, gain_estimator, name="Proposed Ablation (mu=0)"),
     ]
 
     exp1_records = []
+    per_participant_records = []
+    per_class_records = []
+
     print(f"{'Policy Name':<32} {'Macro-F1':<10} {'Bal Acc':<10} {'Clf Err':<10} {'Tot Cost':<12} {'Wake-ups/1k':<12}")
     print("-" * 88)
+
+    test_subjects = sorted(test_df["subject_id"].unique())
 
     for pol in policies:
         res = run_chronological_simulation(
@@ -171,11 +184,57 @@ def main():
         })
         print(f"{pol.name:<32} {m['macro_f1']:<10.4f} {m['balanced_accuracy']:<10.4f} {m['classification_error']:<10.4f} {m['total_modeled_cost']:<12.1f} {m['wake_ups_per_1000_windows']:<12.1f}")
 
+        # Compute per-held-out-participant breakdown
+        act_log = res.action_log
+        for sid in test_subjects:
+            sub_mask = act_log["subject_id"] == sid
+            sub_log = act_log[sub_mask]
+            if len(sub_log) > 0:
+                y_t = sub_log["y_true"].values
+                y_p = sub_log["y_pred"].values
+                f1_sub = float(f1_score(y_t, y_p, average="macro", zero_division=0))
+                bacc_sub = float(balanced_accuracy_score(y_t, y_p))
+                acc_sub = float(accuracy_score(y_t, y_p))
+                cost_sub = float(sub_log["total_cost"].sum())
+                woken_sub = int(sub_log["num_woken"].sum())
+                wake_rate_sub = float((woken_sub / len(sub_log)) * 1000.0)
+                per_participant_records.append({
+                    "policy_name": pol.name,
+                    "subject_id": int(sid),
+                    "num_windows": len(sub_log),
+                    "macro_f1": round(f1_sub, 4),
+                    "balanced_accuracy": round(bacc_sub, 4),
+                    "accuracy": round(acc_sub, 4),
+                    "total_modeled_cost": round(cost_sub, 2),
+                    "wake_ups_per_1000_windows": round(wake_rate_sub, 2),
+                })
+
+        # Compute per-class recall on test split
+        y_true_all = act_log["y_true"].values
+        y_pred_all = act_log["y_pred"].values
+        recalls = recall_score(y_true_all, y_pred_all, average=None, labels=suite.classes_, zero_division=0)
+        class_row = {"policy_name": pol.name}
+        for cls_id, r_val in zip(suite.classes_, recalls):
+            class_row[f"recall_act_{cls_id}"] = round(float(r_val), 4)
+        per_class_records.append(class_row)
+
     df_exp1 = pd.DataFrame(exp1_records)
     exp1_table_path = tables_dir / "main_policy_comparison.csv"
     df_exp1.to_csv(exp1_table_path, index=False)
     print("=" * 88)
     print(f"Saved Main Comparison Table: {exp1_table_path}")
+
+    # Save per-held-out participant performance table
+    df_participant = pd.DataFrame(per_participant_records)
+    part_table_path = tables_dir / "held_out_participant_performance.csv"
+    df_participant.to_csv(part_table_path, index=False)
+    print(f"Saved Held-Out Participant Breakdown: {part_table_path}")
+
+    # Save per-class recall table
+    df_recall = pd.DataFrame(per_class_records)
+    recall_table_path = tables_dir / "policy_per_class_recall_test.csv"
+    df_recall.to_csv(recall_table_path, index=False)
+    print(f"Saved Policy Per-Class Recall Table: {recall_table_path}")
 
     # Plot Pareto Frontier
     plot_pareto_frontier(
@@ -234,7 +293,7 @@ def main():
     # EXPERIMENT 3: OUTAGE SCENARIOS COMPARISON
     # -------------------------------------------------------------
     print("\n" + "=" * 80)
-    print("EXPERIMENT 3: OUTAGE REGIME COMPARISON")
+    print("EXPERIMENT 3: OUTAGE REGIME COMPARISON (OBSERVED AVAILABILITY)")
     print("=" * 80)
 
     scenarios = get_predefined_scenarios()
@@ -271,44 +330,80 @@ def main():
     plot_outage_comparison(df_exp3, output_path=fig_dir / "outage_comparison.png")
 
     # -------------------------------------------------------------
-    # EXPERIMENT 4: HIDDEN AVAILABILITY STRESS TEST
+    # EXPERIMENT 4: MULTI-PARTICIPANT ROTATION EVALUATION
     # -------------------------------------------------------------
     print("\n" + "=" * 80)
-    print("EXPERIMENT 4: HIDDEN AVAILABILITY STRESS TEST (ATTEMPT COSTS)")
+    print("EXPERIMENT 4: MULTI-PARTICIPANT ROTATION EVALUATION")
     print("=" * 80)
 
-    hidden_policies = [
-        SwitchingAwarePolicy(base_cost_model, gain_estimator, name="Proposed"),
-        AlwaysAllPolicy(base_cost_model),
-        BestFixedSubsetPolicy({"hand", "ankle"}, base_cost_model, name="Fixed (Hand+Ankle)"),
-    ]
+    rotations = config["splits"].get("rotations", {})
+    rot_records = []
+    from src.feature_extraction import get_feature_column_names
+    group_feats = get_feature_column_names()
 
-    exp4_records = []
-    for pol in hidden_policies:
-        res = run_chronological_simulation(
-            pol,
-            suite,
-            base_cost_model,
-            test_df,
-            paired_test_masks,
-            hidden_availability=True,
-            prob_cache=prob_cache_test,
+    for fold_id, fold_splits in rotations.items():
+        print(f"Evaluating {fold_id}: Train={fold_splits['train']}, Val={fold_splits['val']}, Test={fold_splits['test']}...")
+        f_splitter = ParticipantSplitter(
+            train_subjects=fold_splits["train"],
+            val_subjects=fold_splits["val"],
+            test_subjects=fold_splits["test"],
         )
-        m = res.metrics
-        exp4_records.append({
-            "policy_name": pol.name,
-            "macro_f1": m["macro_f1"],
-            "total_running_cost": m["total_running_cost"],
-            "total_wake_up_cost": m["total_wake_up_cost"],
-            "total_attempt_cost": m["total_attempt_cost"],
-            "total_modeled_cost": m["total_modeled_cost"],
-        })
-        print(f"{pol.name:<24} Macro-F1: {m['macro_f1']:.4f} | Attempt Cost: {m['total_attempt_cost']:.1f} | Tot Cost: {m['total_modeled_cost']:.1f}")
+        f_train, f_val, f_test = f_splitter.split_dataframe(df)
 
-    df_exp4 = pd.DataFrame(exp4_records)
-    exp4_table_path = tables_dir / "hidden_outage_stress_test.csv"
-    df_exp4.to_csv(exp4_table_path, index=False)
-    print(f"Saved Hidden Outage Stress Test Table: {exp4_table_path}")
+        # Fit suite on fold training data
+        f_suite = SubsetClassifierSuite(feature_columns_by_group=group_feats, random_state=42)
+        f_suite.fit(f_train, label_col="activity_id", protocol_classes=config["data"]["protocol_activities"])
+
+        # Fit gain estimator on fold training data
+        f_gain_df = build_gain_training_dataset(f_suite, f_train, label_col="activity_id")
+        f_gain_est = MarginalGainEstimator(alpha=1.0, random_state=42)
+        f_gain_est.fit(f_gain_df)
+
+        # Precompute test cache for fold
+        f_prob_cache = {s: f_suite.predict_proba(s, f_test) for s in range(8)}
+        f_masks = outage_sim.generate_availability_sequence(len(f_test), seed=42)
+
+        fold_policies = [
+            SwitchingAwarePolicy(base_cost_model, f_gain_est, name="Proposed (Switching-Aware)"),
+            AlwaysAllPolicy(base_cost_model),
+            BestFixedSubsetPolicy({"hand", "ankle"}, base_cost_model, name="Fixed (Hand+Ankle)"),
+            MyopicGainPolicy(base_cost_model, f_gain_est, name="Myopic Gain"),
+            HistoryConfidenceKeepAlivePolicy(base_cost_model, conf_threshold=0.75, keep_alive_windows=4, name="Confidence + Keep-Alive"),
+        ]
+
+        for p in fold_policies:
+            res_fold = run_chronological_simulation(
+                policy=p,
+                suite=f_suite,
+                cost_model=base_cost_model,
+                windows_df=f_test,
+                availability_masks=f_masks,
+                prob_cache=f_prob_cache,
+            )
+            m_f = res_fold.metrics
+            rot_records.append({
+                "fold": fold_id,
+                "test_subjects": str(fold_splits["test"]),
+                "policy_name": p.name,
+                "macro_f1": m_f["macro_f1"],
+                "balanced_accuracy": m_f["balanced_accuracy"],
+                "total_modeled_cost": m_f["total_modeled_cost"],
+                "wake_ups_per_1000_windows": m_f["wake_ups_per_1000_windows"],
+            })
+
+    df_rot = pd.DataFrame(rot_records)
+    rot_table_path = tables_dir / "participant_rotations_comparison.csv"
+    df_rot.to_csv(rot_table_path, index=False)
+    print(f"Saved Participant Rotations Table: {rot_table_path}")
+
+    # Print rotation summary
+    summary_rot = df_rot.groupby("policy_name").agg({
+        "macro_f1": ["mean", "std"],
+        "total_modeled_cost": ["mean", "std"],
+        "wake_ups_per_1000_windows": ["mean", "std"],
+    }).round(4)
+    print("\n--- Summary Across Participant Rotations (Mean ± Std) ---")
+    print(summary_rot)
 
     # -------------------------------------------------------------
     # EXPERIMENT 5: EXACT SYNTHETIC REFERENCE SOLVER
@@ -342,7 +437,7 @@ def main():
     )
 
     print("\n" + "=" * 80)
-    print("ALL EXPERIMENTS SUCCESSFULLY EXECUTED AND ARTIFACTS GENERATED!")
+    print("ALL FIRST-VERSION EXPERIMENTS SUCCESSFULLY EXECUTED AND ARTIFACTS GENERATED!")
     print("=" * 80)
 
 

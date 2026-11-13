@@ -1,0 +1,17 @@
+scenario,policy_name,macro_f1,balanced_accuracy,total_modeled_cost,wake_ups_per_1000_windows
+no_outage,Proposed,0.8146,0.8211,3371.0,1.19
+no_outage,Myopic Gain,0.8151,0.8217,3372.0,1.19
+no_outage,Fixed (Hand+Ankle),0.8151,0.8217,3372.0,1.19
+no_outage,Always All,0.8267,0.8366,4215.0,1.78
+rare_independent,Proposed,0.8116,0.8169,3823.0,78.52
+rare_independent,Myopic Gain,0.8108,0.8164,3845.5,82.69
+rare_independent,Fixed (Hand+Ankle),0.8092,0.8148,3638.0,42.83
+rare_independent,Always All,0.8206,0.8292,4530.5,59.49
+bursty_short,Proposed,0.7939,0.7953,4200.5,163.0
+bursty_short,Myopic Gain,0.7889,0.7918,4252.0,170.14
+bursty_short,Fixed (Hand+Ankle),0.7838,0.7876,3773.0,93.4
+bursty_short,Always All,0.8016,0.8058,4692.5,136.23
+bursty_long,Proposed,0.7214,0.7241,3425.0,116.6
+bursty_long,Myopic Gain,0.7162,0.7212,3471.0,122.55
+bursty_long,Fixed (Hand+Ankle),0.7093,0.7073,2975.0,70.2
+bursty_long,Always All,0.7241,0.7314,3673.0,100.54

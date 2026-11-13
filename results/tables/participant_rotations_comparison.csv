@@ -1,0 +1,16 @@
+fold,test_subjects,policy_name,macro_f1,balanced_accuracy,total_modeled_cost,wake_ups_per_1000_windows
+fold_0,"[106, 109]",Proposed (Switching-Aware),0.7939,0.7953,4200.5,163.0
+fold_0,"[106, 109]",Always All Sensors,0.8016,0.8058,4692.5,136.23
+fold_0,"[106, 109]",Fixed (Hand+Ankle),0.7838,0.7876,3773.0,93.4
+fold_0,"[106, 109]",Myopic Gain,0.7889,0.7918,4252.0,170.14
+fold_0,"[106, 109]",Confidence + Keep-Alive,0.7783,0.7802,3827.0,196.91
+fold_1,"[102, 109]",Proposed (Switching-Aware),0.827,0.8358,4440.5,167.14
+fold_1,"[102, 109]",Always All Sensors,0.8126,0.8243,4924.0,135.41
+fold_1,"[102, 109]",Fixed (Hand+Ankle),0.8183,0.8241,3956.0,94.05
+fold_1,"[102, 109]",Myopic Gain,0.8275,0.8362,4457.0,169.97
+fold_1,"[102, 109]",Confidence + Keep-Alive,0.8085,0.8124,3988.5,186.4
+fold_2,"[104, 109]",Proposed (Switching-Aware),0.6899,0.7387,3921.0,169.98
+fold_2,"[104, 109]",Always All Sensors,0.7081,0.7645,4354.5,135.98
+fold_2,"[104, 109]",Fixed (Hand+Ankle),0.6853,0.7368,3509.0,95.57
+fold_2,"[104, 109]",Myopic Gain,0.6936,0.7423,3971.5,178.96
+fold_2,"[104, 109]",Confidence + Keep-Alive,0.6952,0.7493,4105.5,224.5

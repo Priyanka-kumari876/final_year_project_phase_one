@@ -1,16 +1,3 @@
-"""
-Windowing Module
-================
-Implements fixed-grid sliding window segmentation for human activity recognition
-on continuous sensor streams.
-
-Strict Research Constraints:
-1. Fixed time grid: Windows are segmented on a rigid time grid (e.g. 3.0s window, 1.5s hop).
-2. Boundary Safety: Windows must NEVER cross participant, session, or activity boundaries.
-3. Activity 0 Removal: Transient/unlabelled activities (ID 0) are discarded.
-4. Transition Counting: Windows containing more than one activity label are discarded and tracked.
-5. No Peeking / Shifting: Grid boundaries are fixed and never shifted adaptively.
-"""
 
 from typing import Dict, List, NamedTuple, Optional, Tuple
 import logging

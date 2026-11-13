@@ -275,3 +275,69 @@ class ProposedNoWakeCostPolicy(BaseAcquisitionPolicy):
         chosen = selected.intersection(available_sensors)
         self.active_sensors = set(chosen)
         return chosen
+
+
+
+
+
+class SwitchingNoOutagePolicy(BaseAcquisitionPolicy):
+    """
+    Ablation 7: Switching-aware policy without outage reasoning.
+    The policy decides sensor acquisition assuming all sensors are fully available
+    (ignoring U_t during decision time). Then, unavailable sensors are dropped
+    upon actual acquisition (A_t = intended ∩ U_t).
+    Demonstrates the empirical value of explicit availability handling.
+    """
+
+    def __init__(
+        self,
+        cost_model: SensorCostModel,
+        gain_estimator: MarginalGainEstimator,
+        lambda_mult: float = 1.0,
+        mu_mult: float = 1.0,
+        name: str = "Switching (No Outage Reasoning)",
+    ):
+        super().__init__(name=name, cost_model=cost_model)
+        self.gain_estimator = gain_estimator
+        self.lambda_mult = lambda_mult
+        self.mu_mult = mu_mult
+
+    def select_sensors(
+        self,
+        available_sensors: Set[str],
+        prev_confidence: float,
+        prev_entropy: float,
+        prev_prediction: int,
+    ) -> Set[str]:
+        # Deliberately blind to available_sensors during decision planning:
+        hypothetical_available = set(ALL_MODALITIES)
+        surviving_active = self.active_sensors.intersection(hypothetical_available)
+
+        selected_subset: Set[str] = set()
+        for sensor in ALL_MODALITIES:
+            was_awake = sensor in surviving_active
+            current_tuple = tuple(sorted(list(selected_subset)))
+            pred_gain = self.gain_estimator.predict_gain(
+                prev_confidence=prev_confidence,
+                prev_entropy=prev_entropy,
+                current_subset=current_tuple,
+                candidate_sensor=sensor,
+            )
+            c_run = self.cost_model.running_costs.get(sensor, 1.0)
+            c_wake = self.cost_model.wake_up_costs.get(sensor, 0.0)
+
+            if was_awake:
+                threshold = self.lambda_mult * self.cost_model.lambda_weight * c_run
+            else:
+                threshold = (
+                    self.lambda_mult * self.cost_model.lambda_weight * c_run
+                    + self.mu_mult * self.cost_model.mu_weight * c_wake
+                )
+
+            if pred_gain > threshold:
+                selected_subset.add(sensor)
+
+        # Reality strikes upon physical acquisition: unavailable sensors cannot be read
+        actual_feasible = selected_subset.intersection(available_sensors)
+        self.active_sensors = set(actual_feasible)
+        return actual_feasible

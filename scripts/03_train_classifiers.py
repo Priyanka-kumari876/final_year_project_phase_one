@@ -39,7 +39,7 @@ def main():
     print("=" * 75)
 
     if not features_path.exists():
-        raise FileNotFoundError(f"Feature table not found: {features_path}. Run prepare_data.py first.")
+        raise FileNotFoundError(f"Feature table not found: {features_path}. Run 02_prepare_data.py first.")
 
     df = pd.read_parquet(features_path)
     print(f"Loaded {len(df):,} total windows from {df['subject_id'].nunique()} subjects.")
